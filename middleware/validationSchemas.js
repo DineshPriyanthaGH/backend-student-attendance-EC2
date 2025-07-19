@@ -13,6 +13,7 @@ const commonValidations = {
   name: body('name')
     .notEmpty()
     .withMessage('Name is required')
+    .bail() // Stop on first error
     .isLength({ min: 1, max: 100 })
     .withMessage('Name must be between 1 and 100 characters')
     .trim(),
@@ -21,6 +22,7 @@ const commonValidations = {
   shortName: body('name')
     .notEmpty()
     .withMessage('Name is required')
+    .bail() // Stop on first error
     .isLength({ min: 1, max: 50 })
     .withMessage('Name must be between 1 and 50 characters')
     .trim(),
