@@ -203,24 +203,7 @@ it('should return students for specific class only', async () => {
 2. **Fast Execution**: In-memory mocking for quick test runs
 3. **Isolation**: Each test runs in clean environment
 4. **Maintainable**: Organized structure with reusable utilities
-5. **CI/CD Ready**: Configured for automated testing pipelines
-6. **Documentation**: Clear test descriptions and examples
-
-## 🚦 Running in CI/CD
-
-The tests are configured to work in continuous integration environments:
-
-```yaml
-# Example GitHub Actions configuration
-- name: Run Tests
-  run: npm test
-
-- name: Generate Coverage
-  run: npm run test:coverage
-
-- name: Upload Coverage
-  uses: codecov/codecov-action@v1
-```
+5. **Developer Friendly**: Clear test descriptions and examples
 
 ## 🔄 Test Maintenance
 
