@@ -1,0 +1,76 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [22.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    - name: Create .env file for testing
+      run: |
+        echo "NODE_ENV=test" > .env
+        echo "PORT=3000" >> .env
+        echo "FIREBASE_PROJECT_ID=test-project" >> .env
+        echo "FIREBASE_PRIVATE_KEY=\"test-key\"" >> .env
+        echo "FIREBASE_CLIENT_EMAIL=test@test.com" >> .env
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run tests
+      run: npm test
+      
+    - name: Run tests with coverage
+      run: |
+        if npm run | grep -q "test:coverage"; then
+          npm run test:coverage
+        else
+          echo "No coverage script found, skipping coverage report"
+        fi
+
+  lint:
+    runs-on: self-hosted
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Use Node.js 22.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22.x'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Check code formatting
+      run: |
+        echo "=== Code Quality Check ==="
+        echo "Checking for basic code issues..."
+        # Basic syntax check
+        node -c app.js
+        node -c server.js
+        echo " Basic syntax check passed"
